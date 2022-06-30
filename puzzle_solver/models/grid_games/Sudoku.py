@@ -9,9 +9,10 @@ class Sudoku(GridGame):
 
     @staticmethod
     def from_flat_array(array: []):
-        game = GridGame.from_flat_array(array)
+        game = super(Sudoku, Sudoku).from_flat_array(array)
         if game.get_size() != SUPPORTED_GAME_SIZE:
             raise ValueError('Only board sizes of 9x9 are supported.')
+        return Sudoku(game.game)
 
     def get_cell_size(self):
         return self._cell_size
