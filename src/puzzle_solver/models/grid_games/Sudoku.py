@@ -1,4 +1,4 @@
-from puzzle_solver.models.grid_games import GridGame
+from src.puzzle_solver.models.grid_games import GridGame
 
 SUPPORTED_GAME_SIZE = 81
 SUPPORTED_CELL_SIZE = 3

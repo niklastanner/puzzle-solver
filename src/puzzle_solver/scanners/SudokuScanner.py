@@ -6,8 +6,8 @@ import pytesseract
 
 from tqdm import tqdm
 
-from puzzle_solver.models.grid_games import Sudoku
-from puzzle_solver.scanners import GridGameScanner
+from src.puzzle_solver.models.grid_games import Sudoku
+from src.puzzle_solver.scanners import GridGameScanner
 
 PATH_TO_TESSERACT_EXECUTABLE = r'E:\Program Files\Tesseract-OCR\tesseract.exe'
 log = logging.getLogger(__name__)

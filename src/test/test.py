@@ -3,8 +3,8 @@ from time import time
 
 import cv2
 
-from puzzle_solver.scanners import SudokuScanner
-from puzzle_solver.solver import SudokuSolver
+from src.puzzle_solver.scanners import SudokuScanner
+from src.puzzle_solver.solver import SudokuSolver
 
 
 def load_image(path_to_image):

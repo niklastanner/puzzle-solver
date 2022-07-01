@@ -2,8 +2,8 @@ from itertools import product
 
 from ortools.sat.python import cp_model
 
-from puzzle_solver.models.grid_games import Sudoku
-from puzzle_solver.solver import Solver
+from src.puzzle_solver.models.grid_games import Sudoku
+from src.puzzle_solver.solver import Solver
 
 
 class SudokuSolver(Solver):

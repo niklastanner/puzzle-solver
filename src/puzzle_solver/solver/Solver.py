@@ -1,4 +1,4 @@
-from puzzle_solver.models import Game
+from src.puzzle_solver.models import Game
 
 
 class Solver:
