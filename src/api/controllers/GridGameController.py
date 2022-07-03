@@ -17,8 +17,9 @@ def solve_grid_game():
 
 @grid_game_controller.route('/sudoku', methods=['POST'])
 def solve_sudoku():
-    log.debug(request.files.keys())
+    log.info('Received Sudoku to solve')
     file = request.files['image']
     image = ImageMapper.from_api(file)
     solution = sudoku_service.solve_sudoku(image)
+    log.info('Finished solving Sudoku')
     return jsonify({'msg': 'success', 'solution': solution.to_string()})

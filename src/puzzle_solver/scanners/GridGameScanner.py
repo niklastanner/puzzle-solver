@@ -181,7 +181,7 @@ class GridGameScanner:
         log.debug('Search for lines')
         lines = self.detect_lines(warped)
         lines = self.merge_lines(lines, rho_threshold=20, theta_threshold=0.5)
-        log.info(f'{len(lines)} lines detected')
+        log.debug(f'{len(lines)} lines detected')
 
         log.debug('Split image into tiles')
         padding = len(warped) // 100

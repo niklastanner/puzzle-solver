@@ -1,16 +1,35 @@
 import configparser
 import logging as log
+import os
 from time import time
 
 import cv2
+from pytesseract import pytesseract
 
 from puzzle_solver.scanners import SudokuScanner
 from puzzle_solver.solver import SudokuSolver
 
+CONFIG_FILE = '../resources/config.ini'
+PATH_TO_TESSERACT_EXECUTABLE = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+
+def configure_logger(level=log.INFO):
+    log.basicConfig()
+    log.getLogger().setLevel(level)
+
+
+def load_environment():
+    os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = CONFIG_FILE
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
+    log.debug(config.items())
+    assert 'general' in config
+    return config
+
 
 def load_image(path_to_image):
     img = cv2.imread(path_to_image, cv2.IMREAD_GRAYSCALE)
-    #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Not necessary, since grayscale RGB equals grayscale BGR
+    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Not necessary, since grayscale RGB equals grayscale BGR
     assert img is not None, f'Error opening image {path_to_image}'
     return img
 
@@ -19,6 +38,16 @@ log.basicConfig()
 log.getLogger().setLevel(log.DEBUG)
 
 if __name__ == '__main__':
+    config = load_environment()
+    debug = False
+    log_level = config['general'].getint('log_level')
+    if log_level == log.DEBUG:
+        debug = True
+
+    configure_logger(log_level)
+
+    pytesseract.tesseract_cmd = PATH_TO_TESSERACT_EXECUTABLE  # needed if not running inside docker
+
     sudoku1 = [
         [1, 0, 0, 0, 3, 0, 0, 8, 0],
         [0, 6, 0, 4, 0, 0, 0, 0, 0],

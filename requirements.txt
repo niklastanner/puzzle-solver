@@ -6,3 +6,4 @@ pytesseract
 ortools
 tqdm
 Flask
+configparser
