@@ -1,11 +1,5 @@
-from src.puzzle_solver.models import Game
-
-
 class Solver:
     game = None
 
-    def __init__(self, game: Game):
+    def solve(self, game):
         self.game = game
-
-    def solve(self):
-        pass

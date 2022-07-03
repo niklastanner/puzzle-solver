@@ -1,1 +1,1 @@
-from .ApiController import api_controller
+from .GridGameController import grid_game_controller

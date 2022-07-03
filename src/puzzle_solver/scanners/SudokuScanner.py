@@ -6,10 +6,10 @@ import pytesseract
 
 from tqdm import tqdm
 
-from src.puzzle_solver.models.grid_games import Sudoku
-from src.puzzle_solver.scanners import GridGameScanner
+from puzzle_solver.models.grid_games import Sudoku
+from puzzle_solver.scanners import GridGameScanner
 
-PATH_TO_TESSERACT_EXECUTABLE = r'E:\Program Files\Tesseract-OCR\tesseract.exe'
+PATH_TO_TESSERACT_EXECUTABLE = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 log = logging.getLogger(__name__)
 
 
@@ -51,7 +51,7 @@ class SudokuScanner(GridGameScanner):
         binary = cv2.cvtColor(binary, cv2.COLOR_GRAY2RGB)
 
         log.debug('Scan tiles using OCR')
-        pytesseract.pytesseract.tesseract_cmd = PATH_TO_TESSERACT_EXECUTABLE
+        # pytesseract.pytesseract.tesseract_cmd = PATH_TO_TESSERACT_EXECUTABLE
         cells = self.find_numbers_in_tiled_image(binary, tiles)
 
         log.debug('Convert to sudoku model')

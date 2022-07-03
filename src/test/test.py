@@ -1,10 +1,11 @@
+import configparser
 import logging as log
 from time import time
 
 import cv2
 
-from src.puzzle_solver.scanners import SudokuScanner
-from src.puzzle_solver.solver import SudokuSolver
+from puzzle_solver.scanners import SudokuScanner
+from puzzle_solver.solver import SudokuSolver
 
 
 def load_image(path_to_image):
@@ -65,8 +66,8 @@ if __name__ == '__main__':
 
     # sudoku = Sudoku(sudoku1)
 
-    img1 = 'PoC/img/sudoku-800x800.png'
-    img2 = 'PoC/img/sudoku-481x512.jpeg'
+    img1 = '../../PoC/img/sudoku-800x800.png'
+    img2 = '../../PoC/img/sudoku-481x512.jpeg'
 
     scanner = SudokuScanner()
 
@@ -79,9 +80,9 @@ if __name__ == '__main__':
     log.debug(f'Took {round(end - start, 2)}s to analyze the Image')
 
     log.debug('Solve Sudoku')
-    solver = SudokuSolver(sudoku)
+    solver = SudokuSolver()
     start = time()
-    solution = solver.solve()
+    solution = solver.solve(sudoku)
     end = time()
     log.debug(f'Took {round(end - start, 2)}s to solve the Sudoku')
     solution.print()

@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from src.puzzle_solver.models import Game
+from puzzle_solver.models import Game
 
 
 class GridGame(Game):

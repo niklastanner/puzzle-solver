@@ -1,4 +1,4 @@
-from src.puzzle_solver.models.grid_games import GridGame
+from puzzle_solver.models.grid_games import GridGame
 
 SUPPORTED_GAME_SIZE = 81
 SUPPORTED_CELL_SIZE = 3
@@ -17,10 +17,15 @@ class Sudoku(GridGame):
     def get_cell_size(self):
         return self._cell_size
 
-    def print(self):
+    def to_string(self):
+        s = ''
         cell_size = self._cell_size
         size = self.get_height()
         for i, row in enumerate(self.game):
-            print(("|" + " {} {} {} |" * cell_size).format(*[x if x != 0 else " " for x in row]))
+            s += ("|" + " {} {} {} |" * cell_size).format(*[x if x != 0 else " " for x in row]) + '\n'
             if i != 0 and i % cell_size == 2 and not i == size - 1:
-                print("|" + "+".join(["-------"] * cell_size) + "|")
+                s += "|" + "+".join(["-------"] * cell_size) + "|" + '\n'
+        return s
+
+    def print(self):
+        print(self.to_string())

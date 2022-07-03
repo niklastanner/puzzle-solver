@@ -2,15 +2,12 @@ from itertools import product
 
 from ortools.sat.python import cp_model
 
-from src.puzzle_solver.models.grid_games import Sudoku
-from src.puzzle_solver.solver import Solver
+from puzzle_solver.models.grid_games import Sudoku
+from puzzle_solver.solver import Solver
 
 
 class SudokuSolver(Solver):
-
-    def __init__(self, game: Sudoku):
-        super().__init__(game)
-        self.game = game
+    game = None
 
     def stringify(self, game: Sudoku):
         arr = []
@@ -60,7 +57,8 @@ class SudokuSolver(Solver):
                 [board[i * cell_size + di][j * cell_size + dj] for di in range(cell_size) for dj in range(cell_size)]
             )
 
-    def solve(self):
+    def solve(self, game):
+        self.game = game
         model = cp_model.CpModel()
         board_indices, cell_indices, board = self.configure_board(model)
         self.add_constraints(model, board, board_indices, cell_indices, self.game)
