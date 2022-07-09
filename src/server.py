@@ -5,6 +5,7 @@ import os
 import sys
 
 from flask import Flask
+from waitress import serve
 
 CONFIG_DEV_FILE = 'src/resources/config-dev.ini'
 CONFIG_PROD_FILE = 'src/resources/config-prod.ini'
@@ -75,4 +76,11 @@ if __name__ == '__main__':
 
     log.info("Start Server...")
     app = create_app()
-    app.run(host='0.0.0.0', port=5001, debug=debug)
+
+    ip_address = config['flask']['ip_address']
+    port = config['flask'].getint('port')
+
+    if args.prod:
+        serve(app, host=ip_address, port=port)
+    else:
+        app.run(host=ip_address, port=port, debug=debug)

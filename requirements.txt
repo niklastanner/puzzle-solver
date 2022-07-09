@@ -7,3 +7,4 @@ ortools
 tqdm
 Flask
 configparser
+waitress
