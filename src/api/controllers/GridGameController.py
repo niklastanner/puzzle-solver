@@ -1,6 +1,6 @@
 import logging
 
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, send_file
 
 from api.mappers import ImageMapper
 from api.services import SudokuService
@@ -22,4 +22,7 @@ def solve_sudoku():
     image = ImageMapper.from_api(file)
     solution = sudoku_service.solve_sudoku(image)
     log.info('Finished solving Sudoku')
-    return jsonify({'msg': 'success', 'solution': solution.to_string()})
+    img_io = ImageMapper.from_image(solution.to_image())
+    return send_file(img_io,
+                     attachment_filename='solved_sudoku.png',
+                     mimetype='image/png')

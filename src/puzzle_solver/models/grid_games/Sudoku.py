@@ -1,3 +1,6 @@
+import cv2
+import numpy as np
+
 from puzzle_solver.models.grid_games import GridGame
 
 SUPPORTED_GAME_SIZE = 81
@@ -16,6 +19,49 @@ class Sudoku(GridGame):
 
     def get_cell_size(self):
         return self._cell_size
+
+    def _get_optimal_font_scale(self, text, width, height):
+        for scale in range(60, 0, -1):
+            textSize = cv2.getTextSize(text, fontFace=cv2.FONT_HERSHEY_DUPLEX, fontScale=scale / 10, thickness=1)
+            new_width = textSize[0][0]
+            new_height = textSize[0][1]
+            if new_width <= width and new_height <= height:
+                return scale / 10
+        return 1
+
+    def to_image(self, width=500, height=500):
+        image = np.full((height, width, 3), 255, np.float)
+        x_step = width // 9
+        y_step = height // 9
+        font_scale = self._get_optimal_font_scale('0', x_step - 20, y_step - (height // 25))
+
+        # Draw board
+        x = x_step
+        y = y_step
+        for i in range(len(self.game) - 1):
+            cv2.line(image, (0, y + (y_step // 5)), (width, y + (y_step // 5)), (0, 0, 0), 2)
+            cv2.line(image, (x, 0), (x, height), (0, 0, 0), 2)
+            x += x_step
+            y += y_step
+
+        # Draw numbers
+        y = height // 9
+        for i, row in enumerate(self.game):
+            x = x_step // 5
+            for value in row:
+                if value != 0:
+                    text = str(value)
+                    cv2.putText(image,
+                                text,
+                                (x, y),
+                                cv2.FONT_HERSHEY_DUPLEX,
+                                font_scale,
+                                (0, 0, 0),
+                                2)
+                x += x_step
+            y += y_step
+
+        return image
 
     def to_string(self):
         s = ''

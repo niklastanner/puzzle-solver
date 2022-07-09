@@ -5,9 +5,10 @@ import os
 import sys
 
 from flask import Flask
+from pytesseract import pytesseract
 from waitress import serve
 
-CONFIG_DEV_FILE = 'src/resources/config-dev.ini'
+CONFIG_DEV_FILE = 'resources/config-dev.ini'
 CONFIG_PROD_FILE = 'src/resources/config-prod.ini'
 
 
@@ -41,6 +42,8 @@ def load_environment(args):
         config_file = CONFIG_DEV_FILE
     elif args.prod:
         config_file = CONFIG_PROD_FILE
+    else:
+        raise EnvironmentError('Running mode unknown. Define either dev or prod.')
 
     os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = config_file
     if not os.path.exists(config_file):
@@ -51,6 +54,11 @@ def load_environment(args):
     if 'general' not in config:
         log.error('Config file is not properly configured')
     return config
+
+
+def load_tesseract(args):
+    if args.dev:
+        pytesseract.tesseract_cmd = config['tesseract']['executable']  # needed if not running inside docker
 
 
 def create_app():
@@ -67,6 +75,8 @@ def create_app():
 if __name__ == '__main__':
     args = load_command_line_arguments()
     config = load_environment(args)
+    load_tesseract(args)
+
     debug = False
     log_level = config['general'].getint('log_level')
     if log_level == log.DEBUG:
