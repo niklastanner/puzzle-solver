@@ -8,7 +8,7 @@ from flask import Flask
 from pytesseract import pytesseract
 from waitress import serve
 
-CONFIG_DEV_FILE = 'resources/config-dev.ini'
+CONFIG_DEV_FILE = 'scr/resources/config-dev.ini'
 CONFIG_PROD_FILE = 'src/resources/config-prod.ini'
 
 
