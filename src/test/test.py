@@ -1,6 +1,8 @@
+import argparse
 import configparser
 import logging as log
 import os
+import sys
 from time import time
 
 import cv2
@@ -9,7 +11,7 @@ from pytesseract import pytesseract
 from puzzle_solver.scanners import SudokuScanner
 from puzzle_solver.solver import SudokuSolver
 
-CONFIG_FILE = '../resources/config.ini'
+CONFIG_DEV_FILE = '../resources/config-dev.ini'
 
 
 def configure_logger(level=log.INFO):
@@ -17,11 +19,36 @@ def configure_logger(level=log.INFO):
     log.getLogger().setLevel(level)
 
 
-def load_environment():
-    os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = CONFIG_FILE
-    assert os.path.exists(CONFIG_FILE), f'{CONFIG_FILE} does not exist'
+def load_command_line_arguments():
+    log.debug('Number of arguments:', len(sys.argv), 'arguments.')
+    log.debug('Argument List:', str(sys.argv))
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--dev", action="store_true", help="run in dev mode")
+    parser.add_argument("-p", "--prod", action="store_true", help="run in prod mode")
+    args = parser.parse_args()
+
+    if args.dev and args.prod:
+        log.warning('Cannot run dev and prod mode simultaneously. Running dev mode instead.')
+        args.dev = True
+        args.prod = False
+
+    if not args.dev and not args.prod:
+        args.dev = True
+
+    return args
+
+
+def load_environment(args):
+    if args.dev:
+        config_file = CONFIG_DEV_FILE
+    else:
+        raise EnvironmentError('This file is designed to run in dev mode. But is being started in prod mode instead.')
+
+    os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = config_file
+    assert os.path.exists(config_file), f'{config_file} does not exist'
     config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
+    config.read(config_file)
     log.debug(config.items())
     assert 'general' in config, 'Config file does not exist or is not properly configured'
     return config
@@ -34,11 +61,9 @@ def load_image(path_to_image):
     return img
 
 
-log.basicConfig()
-log.getLogger().setLevel(log.DEBUG)
-
 if __name__ == '__main__':
-    config = load_environment()
+    args = load_command_line_arguments()
+    config = load_environment(args)
     debug = False
     log_level = config['general'].getint('log_level')
     if log_level == log.DEBUG:

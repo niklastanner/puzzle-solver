@@ -132,4 +132,4 @@ dmypy.json
 .idea/
 
 # Custom below
-config.ini
+config*.ini

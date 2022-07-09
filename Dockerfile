@@ -16,4 +16,4 @@ COPY src ./src
 
 EXPOSE 5001
 
-CMD python ./src/server.py
+CMD python ./src/server.py -p
