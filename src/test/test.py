@@ -6,6 +6,7 @@ import sys
 from time import time
 
 import cv2
+from matplotlib import pyplot as plt
 from pytesseract import pytesseract
 
 from puzzle_solver.scanners import SudokuScanner
@@ -140,4 +141,6 @@ if __name__ == '__main__':
     end = time()
     log.debug(f'Took {round(end - start, 2)}s to solve the Sudoku')
     for solution in solutions:
+        plt.imshow(solution.to_image())
         solution.print()
+    plt.show()

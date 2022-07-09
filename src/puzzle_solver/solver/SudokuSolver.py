@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 class SudokuSolver(Solver):
     game = None
-    _solutions = set()
+    _solutions = []
 
     def __init__(self):
         super().__init__()
@@ -86,6 +86,10 @@ class SudokuSolver(Solver):
 
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
             self._solutions = solution_callback.solutions()
+            for i, solution in enumerate(self._solutions):
+                tmp = Sudoku(game.initial_game())
+                tmp.game = solution.game
+                self._solutions[i] = tmp
             return self._solutions
         else:
             log.error('Unable to solve Sudoku')

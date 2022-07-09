@@ -29,7 +29,7 @@ class Sudoku(GridGame):
                 return scale / 10
         return 1
 
-    def to_image(self, width=500, height=500):
+    def to_image(self, width=500, height=500, colored=True):
         image = np.full((height, width, 3), 255, np.float)
         x_step = width // 9
         y_step = height // 9
@@ -45,18 +45,24 @@ class Sudoku(GridGame):
             y += y_step
 
         # Draw numbers
+        initial_game = self.initial_game()
         y = height // 9
         for i, row in enumerate(self.game):
             x = x_step // 5
-            for value in row:
+            for j, value in enumerate(row):
                 if value != 0:
+                    if initial_game[i][j] != 0:
+                        color = (0, 0, 0)  # Black numbers if they were given
+                    else:
+                        color = (0, 0, 255)  # Colored numbers if they were found by solver
+
                     text = str(value)
                     cv2.putText(image,
                                 text,
                                 (x, y),
                                 cv2.FONT_HERSHEY_DUPLEX,
                                 font_scale,
-                                (0, 0, 0),
+                                color,
                                 2)
                 x += x_step
             y += y_step

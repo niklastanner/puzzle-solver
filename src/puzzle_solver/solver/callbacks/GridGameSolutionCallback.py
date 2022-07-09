@@ -6,7 +6,7 @@ from puzzle_solver.models.grid_games import GridGame
 class GridGameSolutionCallback(cp_model.CpSolverSolutionCallback):
     """Print intermediate solutions."""
 
-    _solutions = set()
+    _solutions = []
 
     def __init__(self, variables, game_type=GridGame, limit=None):
         cp_model.CpSolverSolutionCallback.__init__(self)
@@ -24,7 +24,7 @@ class GridGameSolutionCallback(cp_model.CpSolverSolutionCallback):
         for i in range(height):
             for j in range(width):
                 solution.append(self.Value(self._variables[i][j]))
-        self._solutions.add(self._game_type.from_flat_array(solution))
+        self._solutions.append(self._game_type.from_flat_array(solution))
 
         if self._solution_limit is not None and self._solution_count >= self._solution_limit:
             print('Stop search after %i solutions' % self._solution_limit)
