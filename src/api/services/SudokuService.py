@@ -22,8 +22,8 @@ class SudokuService:
 
         log.debug('Solve Sudoku')
         start = time()
-        solution = self._solver.solve(sudoku)
+        solutions = self._solver.solve(sudoku)
         end = time()
         log.debug(f'Took {round(end - start, 2)}s to solve the Sudoku')
 
-        return solution
+        return solutions

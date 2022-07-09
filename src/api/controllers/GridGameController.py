@@ -20,9 +20,9 @@ def solve_sudoku():
     log.info('Received Sudoku to solve')
     file = request.files['image']
     image = ImageMapper.from_api(file)
-    solution = sudoku_service.solve_sudoku(image)
+    solutions = sudoku_service.solve_sudoku(image)
     log.info('Finished solving Sudoku')
-    img_io = ImageMapper.from_image(solution.to_image())
-    return send_file(img_io,
-                     attachment_filename='solved_sudoku.png',
-                     mimetype='image/png')
+    zip_io = ImageMapper.from_images([solution.to_image() for solution in solutions])
+    return send_file(zip_io,
+                     as_attachment=True,
+                     attachment_filename='solved_sudoku.zip')

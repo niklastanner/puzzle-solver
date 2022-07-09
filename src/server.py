@@ -8,7 +8,7 @@ from flask import Flask
 from pytesseract import pytesseract
 from waitress import serve
 
-CONFIG_DEV_FILE = 'scr/resources/config-dev.ini'
+CONFIG_DEV_FILE = 'src/resources/config-dev.ini'
 CONFIG_PROD_FILE = 'src/resources/config-prod.ini'
 
 
@@ -83,6 +83,11 @@ if __name__ == '__main__':
         debug = True
 
     configure_logger(log_level)
+
+    if args.dev:
+        log.debug('Running in development mode')
+    elif args.prod:
+        log.debug('Running in productive mode')
 
     log.info("Start Server...")
     app = create_app()

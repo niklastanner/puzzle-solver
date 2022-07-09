@@ -129,14 +129,15 @@ if __name__ == '__main__':
     image = load_image(img1)
     log.debug('Scan image')
     start = time()
-    sudoku, processed_image, tiles = scanner.scan(image)
+    sudoku = scanner.scan(image)
     end = time()
     log.debug(f'Took {round(end - start, 2)}s to analyze the Image')
 
     log.debug('Solve Sudoku')
     solver = SudokuSolver()
     start = time()
-    solution = solver.solve(sudoku)
+    solutions = solver.solve(sudoku)
     end = time()
     log.debug(f'Took {round(end - start, 2)}s to solve the Sudoku')
-    solution.print()
+    for solution in solutions:
+        solution.print()

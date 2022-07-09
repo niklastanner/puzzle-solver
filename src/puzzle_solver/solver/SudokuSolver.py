@@ -1,13 +1,25 @@
+import configparser
+import logging
+import os
 from itertools import product
 
 from ortools.sat.python import cp_model
 
 from puzzle_solver.models.grid_games import Sudoku
 from puzzle_solver.solver import Solver
+from puzzle_solver.solver.callbacks import GridGameSolutionCallback
+
+log = logging.getLogger(__name__)
 
 
 class SudokuSolver(Solver):
     game = None
+    _solutions = set()
+
+    def __init__(self):
+        super().__init__()
+        self._config = configparser.ConfigParser()
+        self._config.read(os.environ.get('PUZZLE_SOLVER_CONFIG_FILE'))
 
     def stringify(self, game: Sudoku):
         arr = []
@@ -64,13 +76,20 @@ class SudokuSolver(Solver):
         self.add_constraints(model, board, board_indices, cell_indices, self.game)
 
         solver = cp_model.CpSolver()
-        status = solver.Solve(model)
+        solver.parameters.max_time_in_seconds = self._config['solver'].getfloat('time_limit')
+        solver.parameters.enumerate_all_solutions = True
+        solution_callback = GridGameSolutionCallback(board, Sudoku)
+        status = solver.Solve(model, solution_callback)
+
+        log.debug(f'Solver status = {solver.StatusName(status)}')
+        log.debug(f'Number of solutions found: {solution_callback.solution_count()}')
 
         if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
-            for i in range(len(board)):
-                for j in range(len(board)):
-                    self.game.game[i][j] = solver.Value(board[i][j])
-            return self.game
+            self._solutions = solution_callback.solutions()
+            return self._solutions
         else:
-            print('Unable to solve Sudoku')
+            log.error('Unable to solve Sudoku')
             return None
+
+    def get_solutions(self):
+        return self._solutions
