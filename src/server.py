@@ -14,10 +14,13 @@ def configure_logger(level=log.INFO):
 
 def load_environment():
     os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = CONFIG_FILE
+    if not os.path.exists(CONFIG_FILE):
+        log.error(f'{CONFIG_FILE} does not exist')
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     log.debug(config.items())
-    assert 'general' in config
+    if 'general' not in config:
+        log.error('Config file is not properly configured')
     return config
 
 

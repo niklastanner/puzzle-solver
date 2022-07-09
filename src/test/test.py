@@ -10,7 +10,6 @@ from puzzle_solver.scanners import SudokuScanner
 from puzzle_solver.solver import SudokuSolver
 
 CONFIG_FILE = '../resources/config.ini'
-PATH_TO_TESSERACT_EXECUTABLE = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
 def configure_logger(level=log.INFO):
@@ -20,10 +19,11 @@ def configure_logger(level=log.INFO):
 
 def load_environment():
     os.environ['PUZZLE_SOLVER_CONFIG_FILE'] = CONFIG_FILE
+    assert os.path.exists(CONFIG_FILE), f'{CONFIG_FILE} does not exist'
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     log.debug(config.items())
-    assert 'general' in config
+    assert 'general' in config, 'Config file does not exist or is not properly configured'
     return config
 
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     configure_logger(log_level)
 
-    pytesseract.tesseract_cmd = PATH_TO_TESSERACT_EXECUTABLE  # needed if not running inside docker
+    pytesseract.tesseract_cmd = config['tesseract']['executable']  # needed if not running inside docker
 
     sudoku1 = [
         [1, 0, 0, 0, 3, 0, 0, 8, 0],
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     image = load_image(img1)
     log.debug('Scan image')
     start = time()
-    sudoku = scanner.scan(image)
+    sudoku, processed_image, tiles = scanner.scan(image)
     end = time()
     log.debug(f'Took {round(end - start, 2)}s to analyze the Image')
 
