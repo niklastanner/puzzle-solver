@@ -13,13 +13,7 @@ class SudokuService:
         self._scanner = SudokuScanner()
         self._solver = SudokuSolver()
 
-    def solve_sudoku(self, image):
-        log.debug('Scan Sudoku')
-        start = time()
-        sudoku = self._scanner.scan(image)
-        end = time()
-        log.debug(f'Took {round(end - start, 2)}s to analyze the Image')
-
+    def solve_sudoku(self, sudoku):
         log.debug('Solve Sudoku')
         start = time()
         solutions = self._solver.solve(sudoku)
@@ -27,3 +21,12 @@ class SudokuService:
         log.debug(f'Took {round(end - start, 2)}s to solve the Sudoku')
 
         return solutions
+
+    def solve_sudoku_by_image(self, image):
+        log.debug('Scan Sudoku')
+        start = time()
+        sudoku = self._scanner.scan(image)
+        end = time()
+        log.debug(f'Took {round(end - start, 2)}s to analyze the Image')
+
+        return self.solve_sudoku(sudoku)
